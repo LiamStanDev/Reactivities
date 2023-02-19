@@ -4,7 +4,14 @@ using Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddCors(o => o.AddPolicy("any", o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+builder.Services.AddCors(opt => 
+    {
+        opt.AddPolicy("CorsPolicy", policy =>
+        {
+            // policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+        });
+    });
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -22,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors();
+app.UseCors(); // need to be the first, because the browser gonna seed the cors request first.
 
 app.UseAuthorization();
 
