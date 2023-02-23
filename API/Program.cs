@@ -1,26 +1,12 @@
+using API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddCors(opt => 
-    {
-        opt.AddPolicy("CorsPolicy", policy =>
-        {
-            // policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-        });
-    });
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-var configure = builder.Configuration;
-builder.Services.AddDbContext<DataContext>(opt => 
-{
-    opt.UseMySql(configure.GetConnectionString("Default"), ServerVersion.Parse("10.9.5-mariadb"));
-});
+builder.Services.AddApplicationServices(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +29,9 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
+        // service 為IServiceProvider: 為IOC容器的通用接口
+        // GetRequireService() : 若沒有得到Service拋出異常
+        // GetService() : 若沒有返回null
         var context = services.GetRequiredService<DataContext>(); // 從IOC容器中取得
         await context.Database.MigrateAsync();
         await Seed.SeedData(context);
