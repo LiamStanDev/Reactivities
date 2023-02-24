@@ -1,7 +1,6 @@
 using Application.Activities;
 using Application.Core;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 

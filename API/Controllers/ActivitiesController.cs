@@ -10,11 +10,13 @@ public class ActivitiesController : BaseApiController
 {
     [HttpGet] // api/activities
     public async Task<ActionResult<List<Activity>>> GetActivities(
-        CancellationToken cancellationToken
+    /*         CancellationToken cancellationToken */
     )
     {
         // Mediator: 為BaseApiController的屬性
-        return await Mediator.Send(new List.Query(), cancellationToken);
+        return await Mediator.Send(
+            new List.Query() /* , cancellationToken */
+        );
     }
 
     [HttpGet("{id}")] // api/activities/fdsdfasd

@@ -19,7 +19,7 @@ public class List
     {
         private readonly DataContext _context;
 
-        public Handler(DataContext context, ILogger<List> logger) // dependency injection
+        public Handler(DataContext context) // dependency injection
         {
             _context = context;
         }
@@ -29,6 +29,7 @@ public class List
             // cancellation token is used when user no longer what to want and cancel the HTTP request
             // the cancellation token will get the information from API controller
             // we need to pass the token from API controller by Send method to Handler.
+            // best practice: if the request is so long, you need use cancellation token.
             return await _context.Activities.ToListAsync(cancellationToken);
         }
     }

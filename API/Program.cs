@@ -15,6 +15,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors(); // need to be the first, because the browser gonna seed the cors request first.
 
 app.UseAuthorization();
@@ -39,7 +40,7 @@ using (var scope = app.Services.CreateScope())
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occured during migration.");
+        logger.LogError(ex, "An error occurred during migration.");
     }
 }
 

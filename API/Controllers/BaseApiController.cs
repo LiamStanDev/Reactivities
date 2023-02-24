@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")] 
-[EnableCors("any")]
+[Route("api/[controller]")]
+[EnableCors("CorsPolicy")]
 public class BaseApiController : ControllerBase
 {
     // 放在這邊主要是不想要每個Controller都要從IOC容器中重新獲得mediator
@@ -19,6 +19,6 @@ public class BaseApiController : ControllerBase
     // HttpContext.RequestServices 返回IServiceProvider
     // GetRequireService() : 若沒有得到Service拋出異常
     // GetService() : 若沒有返回null
-    protected IMediator Mediator => _mediator ??= 
-        HttpContext.RequestServices.GetService<IMediator>();
+    protected IMediator Mediator =>
+        _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 }

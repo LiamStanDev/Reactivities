@@ -1,0 +1,12 @@
+body {
+  background-color: #eaeaea !important; /* make the background-color style primary to other */
+}
+
+.ui.inverted.top.fixed.menu {
+  background-image: linear-gradient(
+    /* three gradient color from top left to bottom right */ 135deg,
+    rgb(24, 42, 115) 0%,
+    /* the percentage is the position of this color */ rgb(33, 138, 174) 69%,
+    rgb(32, 167, 172) 89%
+  ) !important;
+}
