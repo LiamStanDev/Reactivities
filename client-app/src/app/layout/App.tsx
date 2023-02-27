@@ -4,6 +4,7 @@ import { Container } from "semantic-ui-react";
 import { Activity } from "../models/activity";
 import NavBar from "./NavBar";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
+import { v4 as uuid } from "uuid"; // because it's not a typescript, you need to check the hover
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]); // useState by adding specific type
@@ -41,7 +42,11 @@ function App() {
   function handleCreateOrEditActivity(activity: Activity) {
     activity.id
       ? setActivities([...activities.filter(x => x.id !== activity.id), activity]) // 先把不是的activity從activities中解構出來，後面添加更新的activity。
-      : setActivities([...activities, activity]); // 新的就直接添加
+      : setActivities([...activities, { ...activity, id: uuid() }]); // 新的就直接添加
+  }
+
+  function handleDeleteActivity(id: string) {
+    setActivities([...activities.filter(x => x.id !== id)]);
   }
 
   return (
@@ -57,6 +62,7 @@ function App() {
           openForm={handleFormOpen}
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
+          deleteActivity={handleDeleteActivity}
         />
       </Container>
     </>

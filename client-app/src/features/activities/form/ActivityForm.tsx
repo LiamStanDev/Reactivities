@@ -23,6 +23,7 @@ export default function ActivityForm({ activity: selectedActivity /* renaming */
 
   function handleSubmit() {
     createOrEdit(activity);
+    closeForm();
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
