@@ -6,9 +6,15 @@ interface Props {
   activity: Activity | undefined;
   closeForm: () => void;
   createOrEdit: (activity: Activity) => void;
+  submitting: boolean;
 }
 
-export default function ActivityForm({ activity: selectedActivity /* renaming */, closeForm, createOrEdit }: Props) {
+export default function ActivityForm({
+  activity: selectedActivity /* renaming */,
+  closeForm,
+  createOrEdit,
+  submitting,
+}: Props) {
   const initialState = selectedActivity ?? {
     /* means thant selectedActivity is unidentified use the following like C# ??= */ id: "",
     title: "",
@@ -23,7 +29,6 @@ export default function ActivityForm({ activity: selectedActivity /* renaming */
 
   function handleSubmit() {
     createOrEdit(activity);
-    closeForm();
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -43,10 +48,11 @@ export default function ActivityForm({ activity: selectedActivity /* renaming */
           onChange={handleInputChange}
         />
         <Form.Input placeholder="Category" value={activity.category} name="category" onChange={handleInputChange} />
-        <Form.Input placeholder="Date" value={activity.date} name="date" onChange={handleInputChange} />
+        <Form.Input type="date" placeholder="Date" value={activity.date} name="date" onChange={handleInputChange} />
         <Form.Input placeholder="City" value={activity.city} name="city" onChange={handleInputChange} />
         <Form.Input placeholder="Venue" value={activity.venue} name="venue" onChange={handleInputChange} />
-        <Button floated="right" positive type="submit" content="Submit" />
+        <Button loading={submitting} floated="right" positive type="submit" content="Submit" />{" "}
+        {/* many of component of semantic ui has loading indicator */}
         <Button onClick={closeForm} floated="right" type="button" content="Cancel" />
       </Form>
     </Segment>
