@@ -1,31 +1,26 @@
+import { observer } from "mobx-react-lite";
 import { Button, Container, Menu } from "semantic-ui-react";
+import { useStore } from "../stores/store";
 /* why don't put NavBar.tsx into feature?
  * Ans: This component has no relation with domain, and it is layout.
  */
 
-interface Props {
-  openForm: () => void; // no need id!
-}
-
-function NavBar({ openForm }: Props) {
+function NavBar() {
+  const { activityStore } = useStore();
   return (
     <Menu inverted fixed="top">
       <Container>
         <Menu.Item header>
-          <img
-            src="/assets/logo.png"
-            alt="logo"
-            style={{ marginRight: "10px" }}
-          />
+          <img src="/assets/logo.png" alt="logo" style={{ marginRight: "10px" }} />
           Reactivities
         </Menu.Item>
         <Menu.Item name="Activities" />
         <Menu.Item>
-          <Button onClick={openForm} positive content="Create Activity" />
+          <Button onClick={() => activityStore.openForm()} positive content="Create Activity" />
         </Menu.Item>
       </Container>
     </Menu>
   );
 }
 
-export default NavBar;
+export default observer(NavBar);

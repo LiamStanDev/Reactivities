@@ -1,19 +1,18 @@
-import { useState, MouseEvent, SyntheticEvent } from "react";
+import { observer } from "mobx-react-lite";
+import { useState, MouseEvent } from "react";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { useStore } from "../../../app/stores/store";
 
-interface Props {
-  activities: Activity[];
-  selectActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
-export default function ActivityList({ activities, selectActivity, deleteActivity, submitting }: Props) {
+export default observer(function ActivityList() {
+  const { activityStore } = useStore();
+  const { deleteActivity, activities, loading } = activityStore;
   const [target, setTarget] = useState("");
+
   function handleActivityDelete(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, id: string) {
     setTarget(e.currentTarget.name); // e is event, but you can't use the variable name call "event".
     deleteActivity(id);
   }
+
   return (
     <Segment>
       <Item.Group divided>
@@ -31,14 +30,14 @@ export default function ActivityList({ activities, selectActivity, deleteActivit
               <Item.Extra>
                 <Label basic content={activity.category} />
                 <Button
-                  onClick={() => selectActivity(activity.id)}
+                  onClick={() => activityStore.selectActivity(activity.id)}
                   floated="right"
                   content="View"
                   color="blue"
                 ></Button>
                 <Button
                   name={activity.id}
-                  loading={submitting && target === activity.id}
+                  loading={loading && target === activity.id}
                   onClick={e => handleActivityDelete(e, activity.id)}
                   floated="right"
                   content="Delete"
@@ -51,4 +50,4 @@ export default function ActivityList({ activities, selectActivity, deleteActivit
       </Item.Group>
     </Segment>
   );
-}
+});

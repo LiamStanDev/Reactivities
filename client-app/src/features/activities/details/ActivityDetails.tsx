@@ -1,13 +1,12 @@
-import { Card, Image, Icon, ButtonGroup, Button } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { observer } from "mobx-react-lite";
+import { Card, Image, ButtonGroup, Button } from "semantic-ui-react";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { useStore } from "../../../app/stores/store";
 
-interface Props {
-  activity: Activity;
-  cancelSelectedActivity: () => void;
-  openForm: (id: string) => void;
-}
-
-export default function ActivityDetails({ activity, cancelSelectedActivity, openForm }: Props) {
+export default observer(function ActivityDetails() {
+  const { activityStore } = useStore();
+  const { selectedActivity: activity, openForm, cancelSelectedActivity } = activityStore; // alias
+  if (!activity) return <LoadingComponent />;
   return (
     <Card fluid>
       <Image src={`/assets/categoryImages/${activity.category}.jpg`} /* In React, "/" means "public" folder. */ />
@@ -26,4 +25,4 @@ export default function ActivityDetails({ activity, cancelSelectedActivity, open
       </Card.Content>
     </Card>
   );
-}
+});
