@@ -43,7 +43,6 @@ function App() {
    * id?: string vs id: string | undefined
    * 第一種為id這個參數可有可無，第二種是id可以傳一個未定義，所以第二個參數一定要有。
    */
-
   function handleFormClose() {
     setEditMode(false);
   }
@@ -69,7 +68,11 @@ function App() {
   }
 
   function handleDeleteActivity(id: string) {
-    setActivities([...activities.filter(x => x.id !== id)]);
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter(x => x.id !== id)]);
+      setSubmitting(false);
+    });
   }
 
   if (loading) return <LoadingComponent content="Loading app" />;

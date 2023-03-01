@@ -32,7 +32,12 @@ export default function ActivityDashboard({
   return (
     <Grid>
       <Grid.Column width="10">
-        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} />
+        <ActivityList
+          activities={activities}
+          selectActivity={selectActivity}
+          deleteActivity={deleteActivity}
+          submitting={submitting}
+        />
       </Grid.Column>
       {/* use "&&" just in case that activities don't get from backend when internet connection problem to avoid null pointer exception. */}
       <Grid.Column width="6">
