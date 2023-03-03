@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../app/stores/store";
+import ActivityFilters from "./ActivityFilter";
 import ActivityList from "./ActivityList";
 // import 的順序非常重要 ：can't access lexical declaration '__WEBPACK_DEFAULT_EXPORT__' before initialization
 // 因為ActivityDetails 必須在ActivityList與ActivityForm之後，不然按鈕會指不到ActivityDeails
@@ -23,7 +24,7 @@ export default observer(function ActivityDashboard() {
         <ActivityList />
       </Grid.Column>
       <Grid.Column width="6">
-        <h2>Activity filters</h2>
+        <ActivityFilters />
       </Grid.Column>
     </Grid>
   );

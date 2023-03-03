@@ -1,55 +1,29 @@
 import { observer } from "mobx-react-lite";
-import { useState, MouseEvent } from "react";
-import { Link } from "react-router-dom";
-import { Button, Item, Label, Segment } from "semantic-ui-react";
+import { Fragment } from "react";
+import { Header } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import ActivityListItem from "./ActivityListItem";
 
 export default observer(function ActivityList() {
   const { activityStore } = useStore();
-  const { deleteActivity, activitiesByDate, loading } = activityStore;
-  const [target, setTarget] = useState("");
-
-  function handleActivityDelete(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, id: string) {
-    setTarget(e.currentTarget.name); // e is event, but you can't use the variable name call "event".
-    deleteActivity(id);
-  }
+  const { groupedActivities } = activityStore;
 
   return (
-    <Segment>
-      <Item.Group divided>
-        {activitiesByDate.map(activity => (
-          <Item key={activity.id}>
-            <Item.Content>
-              <Item.Header as="a">{activity.title}</Item.Header>
-              <Item.Meta>{activity.date}</Item.Meta>
-              <Item.Description>
-                <div>{activity.description}</div>
-                <div>
-                  {activity.city}, {activity.venue}
-                </div>
-              </Item.Description>
-              <Item.Extra>
-                <Label basic content={activity.category} />
-                <Button
-                  as={Link}
-                  to={`/activities/${activity.id}`}
-                  floated="right"
-                  content="View"
-                  color="blue"
-                ></Button>
-                <Button
-                  name={activity.id}
-                  loading={loading && target === activity.id}
-                  onClick={e => handleActivityDelete(e, activity.id)}
-                  floated="right"
-                  content="Delete"
-                  color="red"
-                ></Button>
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        ))}
-      </Item.Group>
-    </Segment>
+    <>
+      {Array.from(groupedActivities).map(([date, activities]) => {
+        return (
+          // 要先將map轉換成Array才能使用map函數
+          <Fragment key={date}>
+            <Header sub color="teal">
+              {date}
+            </Header>
+
+            {activities.map(activity => (
+              <ActivityListItem key={activity.id} activity={activity} />
+            ))}
+          </Fragment>
+        );
+      })}
+    </>
   );
 });

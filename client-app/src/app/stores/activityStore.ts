@@ -22,6 +22,23 @@ export default class ActivityStore {
       return Date.parse(a.date) - Date.parse(b.date); // the swap condition
     });
   }
+
+  get groupedActivities() {
+    // (accumulate, current)
+    const groupedByDate = this.activitiesByDate.reduce((groupedByDate, activity) => {
+      const date = activity.date; // as a key
+      // if this date in the activities map, then add current activity into the map value list,
+      // if not, then create a list with the current activity
+      // 因為get方法的返回值是Activity | undefine, 所以使用類型斷言as or !
+      // 使用as就算真的為null編譯器不會拋出異常，！會拋出異常
+      groupedByDate.has(date)
+        ? groupedByDate.set(date, [...(groupedByDate.get(date) as Activity[]), activity])
+        : groupedByDate.set(date, [activity]);
+      return groupedByDate;
+    }, new Map<string, Activity[]>()); // the second parameter is the "initail value" of accumulate
+    return groupedByDate;
+  }
+
   loadActivites = async () => {
     this.setLoadingInitial(true);
     try {
