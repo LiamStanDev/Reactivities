@@ -24,7 +24,7 @@ axios.interceptors.response.use(async respone => {
 // use generic method to make the code reusable, because the response body may be Activity, Activity[].
 // the first <T> : set the generic method with generic type call "T".
 // AxiosResponse is a generic Interface.
-const resonseBody = <T>(response: AxiosResponse<T>) => response.data;
+const resonseBody = <T>(response: AxiosResponse<T>): T => response.data;
 
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(resonseBody),

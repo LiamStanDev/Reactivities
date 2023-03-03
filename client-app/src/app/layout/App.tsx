@@ -1,28 +1,24 @@
-import { useEffect, useState } from "react";
 import { Container } from "semantic-ui-react";
-import { Activity } from "../models/activity";
 import NavBar from "./NavBar";
-import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
-import agent from "../api/agent";
-import LoadingComponent from "./LoadingComponent";
-import { useStore } from "../stores/store";
 import { observer } from "mobx-react-lite";
+import { Outlet, useLocation } from "react-router-dom";
+import HomePage from "../../features/home/HomePage";
 
 function App() {
-  const { activityStore } = useStore();
-
-  useEffect(() => {
-    activityStore.loadActivites();
-  }, [activityStore]); // only when activityStore change the useEffect will be call again.
-
-  if (activityStore.loadingInitial) return <LoadingComponent content="Loading app" />;
-
+  const location = useLocation(); // Returns the current location object, which represents the current URL in web browsers.
+  // 為了使HomePage沒有NavBar所以採用以下作法，不將HomePage放在Router中
   return (
     <>
-      <NavBar />
-      <Container style={{ marginTop: "7em" }}>
-        <ActivityDashboard />
-      </Container>
+      {location.pathname === "/" ? (
+        <HomePage />
+      ) : (
+        <>
+          <NavBar />
+          <Container style={{ marginTop: "7em" }}>
+            <Outlet />
+          </Container>
+        </>
+      )}
     </>
   );
 }
