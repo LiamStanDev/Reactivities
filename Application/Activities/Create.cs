@@ -1,4 +1,5 @@
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -9,6 +10,15 @@ public class Create
     public class Command : IRequest // Command don't return anything
     {
         public Activity Activity { get; set; }
+    }
+
+    // 使用Fluent Validator來在Command送往Handler之前進行校驗
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
+        {
+            RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
+        }
     }
     public class Handler : IRequestHandler<Command>
     {

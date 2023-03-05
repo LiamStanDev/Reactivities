@@ -1,7 +1,7 @@
 using Application.Activities;
 using Application.Core;
 using Domain;
-using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -20,9 +20,11 @@ public class ActivitiesController : BaseApiController
     }
 
     [HttpGet("{id}")] // api/activities/fdsdfasd
-    public async Task<ActionResult<Activity>> GetActivities(Guid id)
+    public async Task<IActionResult> GetActivities(Guid id)
     {
-        return await Mediator.Send(new Details.Query() { Id = id });
+        var result = await Mediator.Send(new Details.Query() { Id = id });
+
+        return HandleResult(result);
     }
 
     [HttpPost]
