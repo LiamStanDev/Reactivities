@@ -6,7 +6,10 @@ interface Props {
 }
 
 // inverted is false: the Dimmer will let the screen dark.
-export default function LoadingComponent({ inverted = true, content = "Loading..." }: Props) {
+export default function LoadingComponent({
+  inverted = true,
+  content = "Loading...",
+}: Props) {
   // active = true: the dimmer gonna show the Loading circle.
   return (
     <Dimmer active={true} inverted={inverted}>
