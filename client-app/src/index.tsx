@@ -7,7 +7,9 @@ import { router } from "./app/router/Routes";
 import { store, StoreContext } from "./app/stores/store";
 import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 root.render(
   // StrictMode will render twice only for development for detect bugs.
   // <React.StrictMode>

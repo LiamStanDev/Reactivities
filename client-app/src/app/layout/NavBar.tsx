@@ -10,13 +10,22 @@ function NavBar() {
       <Container>
         <Menu.Item as={NavLink} to="/" header>
           {" "}
-          <img src="/assets/logo.png" alt="logo" style={{ marginRight: "10px" }} />
+          <img
+            src="/assets/logo.png"
+            alt="logo"
+            style={{ marginRight: "10px" }}
+          />
           Reactivities
         </Menu.Item>
         {/* NavLink會使標籤若在指向的位址會顯示按下，相較於Link更是合作為NavBar使用 */}
         <Menu.Item as={NavLink} to="/activities" name="Activities" />
         <Menu.Item>
-          <Button as={NavLink} to="/createActivity" positive content="Create Activity" />
+          <Button
+            as={NavLink}
+            to="/createActivity"
+            positive
+            content="Create Activity"
+          />
         </Menu.Item>
       </Container>
     </Menu>

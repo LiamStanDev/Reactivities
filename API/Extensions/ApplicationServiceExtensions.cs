@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace API.Extensions;
+
 public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationServices(
@@ -43,9 +44,12 @@ public static class ApplicationServiceExtensions
         // public static IServiceCollection AddMediatR(this IServiceCollection services, params Type[] handlerAssemblyMarkerTypes);
         services.AddMediatR(typeof(List.Handler));
         services.AddAutoMapper(typeof(MappingProfiles));
-        // services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-        services.AddFluentValidationAutoValidation();
-        services.AddValidatorsFromAssemblyContaining<Create>();
+
+        // Validator
+        services.AddFluentValidationAutoValidation(); // add validator automatically
+        services.AddValidatorsFromAssemblyContaining<Create>(); // add the service implement validator
+        //Note: if there're in the same assembly only need scane once
+        // services.AddValidatorsFromAssemblyContaining<Edit>(); // No need
         return services;
     }
 }

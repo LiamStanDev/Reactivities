@@ -1,7 +1,7 @@
+using Application.Core;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace Application.Activities;
@@ -13,9 +13,9 @@ namespace Application.Activities;
 // 所以就是讓Controller用Query與Handler進行溝通，且使用Query來存處信息
 public class List
 {
-    public class Query : IRequest<List<Activity>> { } // Query need a return because we use the CQRS => IRequest need a <List<Activity>> type
+    public class Query : IRequest<Result<List<Activity>>> { } // Query need a return because we use the CQRS => IRequest need a <List<Activity>> type
 
-    public class Handler : IRequestHandler<Query, List<Activity>> // 要指定回傳直
+    public class Handler : IRequestHandler<Query, Result<List<Activity>>> // 要指定回傳直
     {
         private readonly DataContext _context;
 
@@ -24,13 +24,13 @@ public class List
             _context = context;
         }
 
-        public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<List<Activity>>> Handle(
+            Query request,
+            CancellationToken cancellationToken
+        )
         {
-            // cancellation token is used when user no longer what to want and cancel the HTTP request
-            // the cancellation token will get the information from API controller
-            // we need to pass the token from API controller by Send method to Handler.
-            // best practice: if the request is so long, you need use cancellation token.
-            return await _context.Activities.ToListAsync(cancellationToken);
+            var activities = await _context.Activities.ToListAsync();
+            return Result<List<Activity>>.Success(activities);
         }
     }
 }

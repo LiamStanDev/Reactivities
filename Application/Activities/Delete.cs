@@ -1,17 +1,16 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore.Update.Internal;
 using Persistence;
 
 namespace Application.Core;
 
 public class Delete
 {
-    public class Command : IRequest
+    public class Command : IRequest<Result<Unit?>>
     {
         public Guid Id;
     }
 
-    public class Handler : IRequestHandler<Command>
+    public class Handler : IRequestHandler<Command, Result<Unit?>>
     {
         private readonly DataContext _context;
 
@@ -20,15 +19,26 @@ public class Delete
             _context = context;
         }
 
-        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit?>> Handle(
+            Command request,
+            CancellationToken cancellationToken
+        )
         {
             var activity = await _context.Activities.FindAsync(request.Id); // FindAsync will return null if not exist.
-
+            // if (activity == null)
+            // {
+            //     return Result<Unit?>.Success(null); // becasue value tyep like Unit can't assign null, so I change Unit to nullable type Unit?
+            // }
             _context.Remove(activity); // add activity with a tag of "Deleted"
 
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync() > 0;
 
-            return Unit.Value;
+            if (!result)
+            {
+                return Result<Unit?>.Failure("Failed to delete the activity");
+            }
+
+            return Result<Unit?>.Success(Unit.Value);
         }
     }
 }

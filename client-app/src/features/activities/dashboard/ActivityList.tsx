@@ -18,7 +18,7 @@ export default observer(function ActivityList() {
               {date}
             </Header>
 
-            {activities.map(activity => (
+            {activities.map((activity) => (
               <ActivityListItem key={activity.id} activity={activity} />
             ))}
           </Fragment>
