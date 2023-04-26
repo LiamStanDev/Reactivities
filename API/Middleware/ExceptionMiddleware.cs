@@ -51,6 +51,7 @@ public class ExceptionMiddleware
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase // because of the tradition json naming is camelCase differ from C#
             };
             string json = JsonSerializer.Serialize(response, options);
+            System.Console.WriteLine(json);
             await context.Response.WriteAsync(json); // body
         }
     }

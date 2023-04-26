@@ -22,7 +22,7 @@ public static class ApplicationServiceExtensions
                 policy =>
                 {
                     // policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); //.WithOrigins("http://localhost:3000");
                 }
             );
         });

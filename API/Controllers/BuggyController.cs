@@ -4,7 +4,7 @@ namespace API.Controllers;
 
 public class BuggyController : BaseApiController
 {
-    [HttpGet("no-found")]
+    [HttpGet("not-found")]
     public ActionResult GetNotFound()
     {
         return NotFound();
