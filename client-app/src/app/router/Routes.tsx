@@ -1,9 +1,10 @@
-import { createBrowserRouter, RouteObject } from "react-router-dom" // from web router
-import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard"
-import ActivityDetails from "../../features/activities/details/ActivityDetails"
-import ActivityForm from "../../features/activities/form/ActivityForm"
-import TestError from "../../features/error/TestError"
-import App from "../layout/App"
+import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom"; // from web router
+import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
+import ActivityDetails from "../../features/activities/details/ActivityDetails";
+import ActivityForm from "../../features/activities/form/ActivityForm";
+import NotFound from "../../features/error/NotFound";
+import TestError from "../../features/error/TestError";
+import App from "../layout/App";
 
 const routes: RouteObject[] = [
   {
@@ -18,8 +19,10 @@ const routes: RouteObject[] = [
       },
       { path: "createActivity", element: <ActivityForm key="create" /> },
       { path: "manage/:id", element: <ActivityForm key="manage" /> },
-      { path: "error", element: <TestError /> },
+      { path: "errors", element: <TestError /> },
+      { path: "not-found", element: <NotFound /> },
+      { path: "*", element: <Navigate replace to="/not-found" /> },
     ],
   },
-]
-export const router = createBrowserRouter(routes)
+];
+export const router = createBrowserRouter(routes);

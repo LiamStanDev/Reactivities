@@ -25,7 +25,7 @@ export default observer(function ActivityForm() {
   });
 
   useEffect(() => {
-    if (id) loadActivity(id).then(activity => setActivity(activity!)); // we giveup to deal with the type of the input param of setActivity to undefine, using !
+    if (id) loadActivity(id).then((activity) => setActivity(activity!)); // we giveup to deal with the type of the input param of setActivity to undefine, using !
   }, [id, loadActivity]); // because when id change, we need to load different form.
 
   function handleSubmit() {
