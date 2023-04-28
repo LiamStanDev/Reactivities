@@ -3,6 +3,7 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 import ActivityDetails from "../../features/activities/details/ActivityDetails";
 import ActivityForm from "../../features/activities/form/ActivityForm";
 import NotFound from "../../features/error/NotFound";
+import ServerError from "../../features/error/ServerError";
 import TestError from "../../features/error/TestError";
 import App from "../layout/App";
 
@@ -21,6 +22,7 @@ const routes: RouteObject[] = [
       { path: "manage/:id", element: <ActivityForm key="manage" /> },
       { path: "errors", element: <TestError /> },
       { path: "not-found", element: <NotFound /> },
+      { path: "server-error", element: <ServerError /> },
       { path: "*", element: <Navigate replace to="/not-found" /> },
     ],
   },

@@ -1,5 +1,5 @@
 export interface ServerError {
   statusCode: number;
   message: string;
-  detail: string;
+  details: string;
 }
