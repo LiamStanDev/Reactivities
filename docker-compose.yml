@@ -1,6 +1,6 @@
 version: "1"
 services:
-  db:
+  reactivity-db:
     image: mariadb:10.7
     ports:
       - "3396:3306"
