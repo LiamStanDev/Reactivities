@@ -1,11 +1,18 @@
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Form, Segment } from "semantic-ui-react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Activity } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import { v4 as uuid } from "uuid";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import MyTextInput from "../../../app/common/form/MyTextInput";
+import MyTextArea from "../../../app/common/form/MyTextArea";
+import MySelectInput from "../../../app/common/form/MySelectInput";
+import MyDateInput from "../../../app/common/form/MyDateInput";
+import { categoryOptions } from "../../../app/common/options/categoryOptions";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
@@ -13,22 +20,31 @@ export default observer(function ActivityForm() {
   // get id from React Router
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [activity, setActivity] = useState<Activity>({
     id: "",
     title: "",
     category: "",
     description: "",
-    date: "",
+    date: undefined,
     city: "",
     venue: "",
+  });
+
+  // add validation schema  (use yup package)
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required("The activity title is required"),
+    description: Yup.string().required("The activity description is required"),
+    category: Yup.string().required(),
+    date: Yup.string().required("date is required"),
+    venue: Yup.string().required(),
+    city: Yup.string().required(),
   });
 
   useEffect(() => {
     if (id) loadActivity(id).then((activity) => setActivity(activity!)); // we giveup to deal with the type of the input param of setActivity to undefine, using !
   }, [id, loadActivity]); // because when id change, we need to load different form.
 
-  function handleSubmit() {
+  function handleFormSubmit(activity: Activity) {
     if (!activity.id) {
       activity.id = uuid();
       createActivity(activity).then(() => navigate(`/activities/${activity.id}`));
@@ -37,32 +53,41 @@ export default observer(function ActivityForm() {
     }
   }
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    /* the event type can be seen by hover on the onChange element */
-    const { name, value } = event.target; // event.target is html dom can get the name and value.
-    setActivity({ ...activity, [name]: value }); // 這個方法需要對下面表單所有選項都適用，本來是要寫Title, Description...每個都需要建立一個方法去更新指定的屬性，但這樣子就能使用一個方法，首先去獲得html中的name的值，作為物件屬性的名稱，並使用value將其進行賦值，這樣子的寫法非常適合用於表單操作。
-  }
-
   if (loadingInitial) return <LoadingComponent content="Loading activity..." />;
 
   return (
     <Segment clearing>
-      <Form onSubmit={handleSubmit} autoComplete="off">
-        <Form.Input placeholder="Title" value={activity.title} name="title" onChange={handleInputChange} />
-        <Form.TextArea
-          placeholder="Description"
-          value={activity.description}
-          name="description"
-          onChange={handleInputChange}
-        />
-        <Form.Input placeholder="Category" value={activity.category} name="category" onChange={handleInputChange} />
-        <Form.Input type="date" placeholder="Date" value={activity.date} name="date" onChange={handleInputChange} />
-        <Form.Input placeholder="City" value={activity.city} name="city" onChange={handleInputChange} />
-        <Form.Input placeholder="Venue" value={activity.venue} name="venue" onChange={handleInputChange} />
-        <Button loading={loading} floated="right" positive type="submit" content="Submit" />{" "}
-        {/* many of component of semantic ui has loading indicator */}
-        <Button as={Link} to="/activities" floated="right" type="button" content="Cancel" />
-      </Form>
+      {/* enableReinitialize mean if the activity change the form will change*/}
+      <Header content="Activity Details" sub color="teal" />
+      <Formik
+        validationSchema={validationSchema}
+        enableReinitialize
+        initialValues={activity}
+        onSubmit={(values) => handleFormSubmit(values)}
+      >
+        {({ handleSubmit, isValid, isSubmitting, dirty }) => (
+          <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
+            {/* this class name is from semantic ui*/}
+            <MyTextInput name="title" placeholder="Title" />
+            <MyTextArea rows={3} placeholder="Description" name="description" />
+            <MySelectInput options={categoryOptions} placeholder="Category" name="category" />
+            <MyDateInput name="date" showTimeSelect timeCaption="time" dateFormat="MMMM d, yyyy h:mm aa" />
+            <Header content="Location Details" sub color="teal" />
+            <MyTextInput placeholder="City" name="city" />
+            <MyTextInput placeholder="Venue" name="venue" />
+            <Button
+              disabled={isSubmitting || !dirty || !isValid}
+              loading={loading}
+              floated="right"
+              positive
+              type="submit"
+              content="Submit"
+            />{" "}
+            {/* many of component of semantic ui has loading indicator */}
+            <Button as={Link} to="/activities" floated="right" type="button" content="Cancel" />
+          </Form>
+        )}
+      </Formik>
     </Segment>
   );
 });

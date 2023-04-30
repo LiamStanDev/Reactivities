@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import { v4 as uuid } from "uuid";
+import { format } from "date-fns";
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
   selectedActivity: Activity | undefined = undefined; // don't use null, alwayse use undefine.
@@ -19,14 +20,14 @@ export default class ActivityStore {
   get activitiesByDate() {
     return Array.from(this.activityRegistry.values()).sort((a, b) => {
       // Comparator
-      return Date.parse(a.date) - Date.parse(b.date); // the swap condition
+      return a.date!.getTime() - b.date!.getTime(); // the swap condition
     });
   }
 
   get groupedActivities() {
     // (accumulate, current)
     const groupedByDate = this.activitiesByDate.reduce((groupedByDate, activity) => {
-      const date = activity.date; // as a key
+      const date = format(activity.date!, "dd MMMM yyyy"); // as a key
       // if this date in the activities map, then add current activity into the map value list,
       // if not, then create a list with the current activity
       // 因為get方法的返回值是Activity | undefine, 所以使用類型斷言as or !
@@ -91,7 +92,7 @@ export default class ActivityStore {
     }
   };
   private setActivity = (activity: Activity) => {
-    activity.date = activity.date.split("T")[0];
+    activity.date = new Date(activity.date!);
     this.activityRegistry.set(activity.id, activity);
   };
   private getActivity = (id: string) => {
