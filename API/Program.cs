@@ -1,5 +1,7 @@
 using API.Extensions;
 using API.Middleware;
+using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplicationServices(builder.Configuration);
-
+builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>(); // my middleware
@@ -37,8 +39,9 @@ using (var scope = app.Services.CreateScope())
         // GetRequireService() : 若沒有得到Service拋出異常
         // GetService() : 若沒有返回null
         var context = services.GetRequiredService<DataContext>(); // 從IOC容器中取得
+        var userManager = services.GetRequiredService<UserManager<AppUser>>();
         await context.Database.MigrateAsync();
-        await Seed.SeedData(context);
+        await Seed.SeedData(context, userManager);
     }
     catch (Exception ex)
     {
