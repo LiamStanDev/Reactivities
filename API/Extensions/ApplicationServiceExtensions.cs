@@ -27,16 +27,13 @@ public static class ApplicationServiceExtensions
             );
         });
 
-        services.AddControllers();
-
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        var configure = config;
         services.AddDbContext<DataContext>(opt =>
         {
             opt.UseMySql(
-                configure.GetConnectionString("Default"),
+                config.GetRequiredSection("ConnectionStrings")["Default"],
                 ServerVersion.Parse("10.9.5-mariadb")
             );
         });

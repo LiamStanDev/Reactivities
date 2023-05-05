@@ -2,6 +2,7 @@ using Application.Activities;
 using Application.Core;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -16,6 +17,7 @@ public class ActivitiesController : BaseApiController
         return HandleResult(result);
     }
 
+    [Authorize]
     [HttpGet("{id}")] // api/activities/fdsdfasd
     public async Task<IActionResult> GetActivities(Guid id)
     {
