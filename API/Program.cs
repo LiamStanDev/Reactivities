@@ -38,7 +38,7 @@ using (var scope = app.Services.CreateScope())
         // service 為IServiceProvider: 為IOC容器的通用接口
         // GetRequireService() : 若沒有得到Service拋出異常
         // GetService() : 若沒有返回null
-        var context = services.GetRequiredService<DataContext>(); // 從IOC容器中取得
+        var context = services.GetRequiredService<DataContext>(); // require from IOC containner
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         await context.Database.MigrateAsync();
         await Seed.SeedData(context, userManager);
