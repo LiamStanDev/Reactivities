@@ -16,7 +16,13 @@ import { categoryOptions } from "../../../app/common/options/categoryOptions";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
-  const { createActivity, updateActivity, loading, loadActivity, loadingInitial } = activityStore;
+  const {
+    createActivity,
+    updateActivity,
+    loading,
+    loadActivity,
+    loadingInitial,
+  } = activityStore;
   // get id from React Router
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,7 +31,7 @@ export default observer(function ActivityForm() {
     title: "",
     category: "",
     description: "",
-    date: undefined,
+    date: null,
     city: "",
     venue: "",
   });
@@ -47,9 +53,13 @@ export default observer(function ActivityForm() {
   function handleFormSubmit(activity: Activity) {
     if (!activity.id) {
       activity.id = uuid();
-      createActivity(activity).then(() => navigate(`/activities/${activity.id}`));
+      createActivity(activity).then(() =>
+        navigate(`/activities/${activity.id}`),
+      );
     } else {
-      updateActivity(activity).then(() => navigate(`/activities/${activity.id}`));
+      updateActivity(activity).then(() =>
+        navigate(`/activities/${activity.id}`),
+      );
     }
   }
 
@@ -70,8 +80,17 @@ export default observer(function ActivityForm() {
             {/* this class name is from semantic ui*/}
             <MyTextInput name="title" placeholder="Title" />
             <MyTextArea rows={3} placeholder="Description" name="description" />
-            <MySelectInput options={categoryOptions} placeholder="Category" name="category" />
-            <MyDateInput name="date" showTimeSelect timeCaption="time" dateFormat="MMMM d, yyyy h:mm aa" />
+            <MySelectInput
+              options={categoryOptions}
+              placeholder="Category"
+              name="category"
+            />
+            <MyDateInput
+              name="date"
+              showTimeSelect
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa"
+            />
             <Header content="Location Details" sub color="teal" />
             <MyTextInput placeholder="City" name="city" />
             <MyTextInput placeholder="Venue" name="venue" />
@@ -84,7 +103,13 @@ export default observer(function ActivityForm() {
               content="Submit"
             />{" "}
             {/* many of component of semantic ui has loading indicator */}
-            <Button as={Link} to="/activities" floated="right" type="button" content="Cancel" />
+            <Button
+              as={Link}
+              to="/activities"
+              floated="right"
+              type="button"
+              content="Cancel"
+            />
           </Form>
         )}
       </Formik>

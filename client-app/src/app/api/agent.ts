@@ -13,6 +13,14 @@ const sleep = (delay: number) => {
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
+axios.interceptors.request.use((config) => {
+  const token = store.commonStore.token;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // interceptor: 攔截器
 // 只會攔截response, request不會攔截
 axios.interceptors.response.use(
@@ -38,22 +46,19 @@ axios.interceptors.response.use(
         } else {
           toast.error(data);
         }
-        toast.error("bad request");
         break;
       case 401:
         toast.error("unauthorised");
         break;
       case 403:
-        toast.error("forbiddne");
+        toast.error("forbidden");
         break;
       case 404:
         router.navigate("/not-found");
-        // toast.error("not found");
         break;
       case 500:
         store.commonStore.setServerError(data);
         router.navigate("/server-error");
-        // toast.error("server error");
         break;
     }
     return Promise.reject(error);
@@ -63,13 +68,14 @@ axios.interceptors.response.use(
 // use generic method to make the code reusable, because the response body may be Activity, Activity[].
 // the first <T> : set the generic method with generic type call "T".
 // AxiosResponse is a generic Interface.
-const resonseBody = <T>(response: AxiosResponse<T>): T => response.data;
+const responseBody = <T>(response: AxiosResponse<T>): T => response.data;
 
 const requests = {
-  get: <T>(url: string) => axios.get<T>(url).then(resonseBody),
-  post: <T>(url: string, body: {}) => axios.post<T>(url, body).then(resonseBody),
-  put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(resonseBody),
-  del: <T>(url: string) => axios.delete<T>(url).then(resonseBody),
+  get: <T>(url: string) => axios.get<T>(url).then(responseBody),
+  post: <T>(url: string, body: {}) =>
+    axios.post<T>(url, body).then(responseBody),
+  put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
+  del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
 // contain our all activities
@@ -77,14 +83,16 @@ const Activities = {
   list: () => requests.get<Activity[]>("/activities"),
   details: (id: string) => requests.get<Activity>(`/activities/${id}`),
   create: (activity: Activity) => requests.post<void>("/activities", activity), // we dot need the respone body information, set void.
-  update: (activity: Activity) => requests.put<void>(`/activities/${activity.id}`, activity),
+  update: (activity: Activity) =>
+    requests.put<void>(`/activities/${activity.id}`, activity),
   delete: (id: string) => requests.del<void>(`/activities/${id}`),
 };
 
 const Account = {
   current: () => requests.get<User>("/account"),
   login: (user: UserFormValues) => requests.post<User>("/account/login", user),
-  register: (user: UserFormValues) => requests.post<User>("/account/register", user),
+  register: (user: UserFormValues) =>
+    requests.post<User>("/account/register", user),
 };
 
 const agent = {

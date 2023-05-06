@@ -16,7 +16,8 @@ export default observer(function ActivityDashboard() {
     if (activityRegistry.size <= 1) loadActivites();
   }, [activityRegistry.size, loadActivites]); // only when activityStore change the useEffect will be call again.
 
-  if (activityStore.loadingInitial) return <LoadingComponent content="Loading app" />;
+  if (activityStore.loadingInitial)
+    return <LoadingComponent content="Loading activities" />;
 
   return (
     <Grid>
