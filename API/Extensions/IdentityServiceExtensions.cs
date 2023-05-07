@@ -28,6 +28,7 @@ public static class IdentityServiceExtensions
         // the key need to be the same with in TokenService.
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
+        services.AddScoped<TokenService>();
         // Bearer is an protocol inside http header like:
         // """
         // Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWV
@@ -50,7 +51,6 @@ public static class IdentityServiceExtensions
                     ValidateAudience = false,
                 };
             });
-        services.AddScoped<TokenService>();
 
         return services;
     }

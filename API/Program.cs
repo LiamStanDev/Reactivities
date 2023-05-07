@@ -30,7 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("CorsPolicy"); // need to be the first, because the browser gonna seed the cors request first.
 
-app.UseAuthorization(); // Add for JWT identification. Note: need before Authorization.
+app.UseAuthentication(); // Add for JWT identification. Note: need before Authorization.
 app.UseAuthorization();
 
 app.MapControllers();

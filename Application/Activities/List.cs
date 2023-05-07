@@ -1,5 +1,6 @@
 using Application.Core;
-using Domain;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -13,24 +14,29 @@ namespace Application.Activities;
 // 所以就是讓Controller用Query與Handler進行溝通，且使用Query來存處信息
 public class List
 {
-    public class Query : IRequest<Result<List<Activity>>> { } // Query need a return because we use the CQRS => IRequest need a <List<Activity>> type
+    public class Query : IRequest<Result<List<ActivityDto>>> { } // Query need a return because we use the CQRS => IRequest need a <List<Activity>> type
 
-    public class Handler : IRequestHandler<Query, Result<List<Activity>>> // 要指定回傳直
+    public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>> // 要指定回傳直
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public Handler(DataContext context) // dependency injection
+        public Handler(DataContext context, IMapper mapper) // dependency injection
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<Result<List<Activity>>> Handle(
+        public async Task<Result<List<ActivityDto>>> Handle(
             Query request,
             CancellationToken cancellationToken
         )
         {
-            var activities = await _context.Activities.ToListAsync();
-            return Result<List<Activity>>.Success(activities);
+            var activities = await _context.Activities
+                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return Result<List<ActivityDto>>.Success(activities);
         }
     }
 }

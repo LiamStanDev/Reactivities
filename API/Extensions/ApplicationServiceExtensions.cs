@@ -1,7 +1,9 @@
 using Application.Activities;
 using Application.Core;
+using Application.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Secutiry;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -47,6 +49,9 @@ public static class ApplicationServiceExtensions
         services.AddValidatorsFromAssemblyContaining<Create>(); // add the service implement validator
         //Note: if there're in the same assembly only need scane once
         // services.AddValidatorsFromAssemblyContaining<Edit>(); // No need
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserAccessor, UserAccessor>();
         return services;
     }
 }

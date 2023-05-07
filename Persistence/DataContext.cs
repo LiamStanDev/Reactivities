@@ -19,24 +19,20 @@ public class DataContext : IdentityDbContext<AppUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        // We want the entityframework core to use migrations scaffold to create the relationship
-        // Form the primary key of ActivityAttendee
-        // HasKey Sets the properties that make up the primary key for this entity type
-        builder.Entity<ActivityAttendee>(x => x.HasKey(aa => new { aa.AppUserId, aa.ActivityId }));
-
-        // AppUser to many Activity
+        // create a primary key with combine AppUserId, and ActivityId
+        builder.Entity<ActivityAttendee>().HasKey(aa => new { aa.AppUserId, aa.ActivityId });
+        // create the relationship with ActivityAttendee and Activity
         builder
             .Entity<ActivityAttendee>()
-            .HasOne(aa => aa.AppUser) // 設定AppUser
-            .WithMany(aa => aa.Activities) // 指定對應的many屬性 (Domain.AppUser中)
-            .HasForeignKey(aa => aa.AppUserId); // 使用AppUserId作為AppUser的外鍵
+            .HasOne(aa => aa.Activity) // ActivityAttendee has an navigator to one activity
+            .WithMany(a => a.Attendees) // Activity has an navigator to many ActivityAttendee
+            .HasForeignKey(aa => aa.ActivityId); // use ActivityId as ForeignKey
 
-        // Activity to many AppUser
+        // create the relationship with ActivityAttendee and AppUser
         builder
             .Entity<ActivityAttendee>()
-            .HasOne(aa => aa.Activity) // 設定Activity
-            .WithMany(aa => aa.Attendees) // 指定對應的many屬性 (Domain.Activity中)
-            .HasForeignKey(aa => aa.ActivityId); // 使用ActivityId作為外鍵
+            .HasOne(aa => aa.AppUser) // ActivityAttendee has an navigator to AppUser
+            .WithMany(u => u.Activities) // AppUser has an navigator to many ActivityAttendee
+            .HasForeignKey(aa => aa.AppUserId); // use AppUserId as ForeignKey
     }
 }

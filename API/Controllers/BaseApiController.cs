@@ -7,7 +7,6 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[EnableCors("CorsPolicy")]
 public class BaseApiController : ControllerBase
 {
     // 放在這邊主要是不想要每種Controller都要從IOC容器中重新獲得mediator

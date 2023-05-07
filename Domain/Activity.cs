@@ -14,5 +14,9 @@ public class Activity
     public string Category { get; set; }
     public string City { get; set; }
     public string Venue { get; set; }
-    public ICollection<ActivityAttendee> Attendees { get; set; }
+    public bool IsCancelled { get; set; }
+
+    // add navigator
+    // Note: need initialize, before append the list
+    public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
 }
