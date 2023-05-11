@@ -171,7 +171,8 @@ dotnet ef migrations add IdentityAdded -p Persistence -s API
    app.UseAuthentication(); // Add for JWT identification. Note: need before Authorization.
    app.UseAuthorization();
    ```
-6. 對所有 Controller 啟用 Authorization，與配置 Authorization Policy
+6. 對所有 Controller 啟用 Authorization，與配置 Authorization Policy，這邊我們使用全局的
+   AuthorizationFilter，表示有授權者才能使用
    ```C#
    builder.AddControllers(opt =>
    {
@@ -181,4 +182,6 @@ dotnet ef migrations add IdentityAdded -p Persistence -s API
    })
    ```
 7. 在 AccountController 裡面的 Login 與 Register "方法"中，添加[AllowAnonymous]這樣才能在沒有權限下使用。
+   - Note: 若在 Controller 上添加[AllowAnonymous]，對裡面個別方法添加[Authorize]，還是 AllowAnonymous，並不會被 Authorize 覆蓋
+     所以最好是在 Login 與 Register 添加[AllowAnonymous]
 8. 修改 Login, Register 與 GetCurrentUser 要提供 jwt 給 UserDto

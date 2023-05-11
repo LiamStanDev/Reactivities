@@ -38,7 +38,7 @@ public class UpdateAttendance
                 return null;
             }
 
-            // 從HttpContext中取得User名稱，然後使用找到對應的User
+            // 從DataContext中取得User名稱，然後使用找到對應的User
             var user = await _context.Users.FirstOrDefaultAsync(
                 x => x.UserName == _userAccessor.GetUsername()
             );
