@@ -8,7 +8,6 @@ import { useStore } from "../stores/store";
 import { useEffect } from "react";
 import LoadingComponent from "./LoadingComponent";
 import ModalContainer from "../common/modals/ModalContainer";
-
 function App() {
   const location = useLocation(); // Returns the current location object, which represents the current URL in web browsers.
   // 為了使HomePage沒有NavBar所以採用以下作法，不將HomePage放在Router中

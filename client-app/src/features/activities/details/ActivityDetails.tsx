@@ -9,7 +9,7 @@ import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
 import ActivityDetailedSidebar from "./ActivityDetailedSidebar";
 
-export default observer(function ActivityDetails() {
+const ActivityDetails = () => {
   const { activityStore } = useStore();
   const { selectedActivity: activity, loadActivity } = activityStore; // alias
   const { id } = useParams();
@@ -27,8 +27,10 @@ export default observer(function ActivityDetails() {
         <ActivityDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ActivityDetailedSidebar />
+        <ActivityDetailedSidebar activity={activity} />
       </Grid.Column>
     </Grid>
   );
-});
+};
+
+export default observer(ActivityDetails);

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Header, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { Activity } from "../../../app/models/activity";
+import { Activity, ActivityFormValues } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import { v4 as uuid } from "uuid";
 import { Formik, Form } from "formik";
@@ -26,15 +26,9 @@ export default observer(function ActivityForm() {
   // get id from React Router
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activity, setActivity] = useState<Activity>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: null,
-    city: "",
-    venue: "",
-  });
+  const [activity, setActivity] = useState<ActivityFormValues>(
+    new ActivityFormValues(),
+  );
 
   // add validation schema  (use yup package)
   const validationSchema = Yup.object().shape({
@@ -47,10 +41,14 @@ export default observer(function ActivityForm() {
   });
 
   useEffect(() => {
-    if (id) loadActivity(id).then((activity) => setActivity(activity!)); // we giveup to deal with the type of the input param of setActivity to undefine, using !
+    if (id) {
+      loadActivity(id).then((activity) =>
+        setActivity(new ActivityFormValues(activity)),
+      );
+    } // we giveup to deal with the type of the input param of setActivity to undefine, using !
   }, [id, loadActivity]); // because when id change, we need to load different form.
 
-  function handleFormSubmit(activity: Activity) {
+  function handleFormSubmit(activity: ActivityFormValues) {
     if (!activity.id) {
       activity.id = uuid();
       createActivity(activity).then(() =>
@@ -96,7 +94,7 @@ export default observer(function ActivityForm() {
             <MyTextInput placeholder="Venue" name="venue" />
             <Button
               disabled={isSubmitting || !dirty || !isValid}
-              loading={loading}
+              loading={isSubmitting}
               floated="right"
               positive
               type="submit"
